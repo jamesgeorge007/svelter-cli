@@ -1,4 +1,4 @@
-# Svelter
+# Svelter-CLI
 
 An unofficial CLI solution for the Svelte ecosystem.
 

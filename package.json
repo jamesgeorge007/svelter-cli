@@ -1,13 +1,15 @@
 {
-  "name": "svelter",
-  "version": "1.0.0-alpha.0",
+  "name": "svelter-cli",
+  "version": "0.1.0",
   "description": "An Unofficial CLI solution for the Svelte ecosystem",
   "main": "./bin/index.js",
   "files": [
     "bin",
     "src"
   ],
-  "bin": "./bin/index.js",
+  "bin": {
+    "svelter": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix ./src"
