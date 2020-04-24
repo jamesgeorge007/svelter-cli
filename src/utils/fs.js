@@ -1,12 +1,12 @@
 const fs = require("fs");
 const path = require("path");
+
 /**
  * Copy files
  * @param {any} source - source directory path
  * @param {any} target - path to the destination directory
  * @returns {Void}
  */
-
 const copyFile = (source, target) => {
   let targetFile = target;
 

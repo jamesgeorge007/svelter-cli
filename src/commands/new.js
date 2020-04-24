@@ -10,6 +10,13 @@ const { description, name } = require("../../package");
 const copyDir = require("../utils/fs");
 const hasYarn = require("../utils/validate");
 
+/**
+ * Scaffold Svelte/Sapper project
+ * @param {string} projectName - source directory path
+ * @param {Object} opts - path to the destination directory
+ * @returns {Promise<void>}
+ */
+
 const projectScaffold = async (projectName, opts) => {
   await showBanner(name, description);
 
@@ -20,6 +27,7 @@ const projectScaffold = async (projectName, opts) => {
     process.exit(1);
   }
 
+  // --use-yarn flag resolution
   let packageManager = "npm";
   if (opts.useYarn && hasYarn()) {
     packageManager = "yarn";
@@ -34,21 +42,25 @@ const projectScaffold = async (projectName, opts) => {
 
   const templateDir = templateOfChoice === "Svelte" ? "svelte" : "sapper";
 
+  // Copy template to the user's path
   const source = path.resolve(__dirname, "..", "templates", templateDir);
   const dest = process.cwd();
 
   copyDir(source, dest);
 
+  // Rename directory to the respective name as supplied by the user
   const renameFrom = path.join(dest, templateDir);
   const renameTo = path.join(dest, projectName);
   fs.renameSync(renameFrom, renameTo);
 
+  // Update package.json
   const pkgJsonPath = `${projectName}/package.json`;
   const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath));
   pkgJson.name = projectName;
 
   fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
 
+  // Install project dependencies
   const spinner = ora("Installing dependencies").start();
   try {
     await execa.command(`${packageManager} install`, {
@@ -59,6 +71,8 @@ const projectScaffold = async (projectName, opts) => {
     throw err;
   }
   spinner.succeed("Done");
+
+  // Final instructions
   console.log(kleur.green(`\n Just couple of steps remaining`));
   console.log(
     kleur.cyan(`\n 1. cd ${projectName}\n 2. ${packageManager} run dev`)

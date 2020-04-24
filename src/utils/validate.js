@@ -1,5 +1,9 @@
 const execa = require("execa");
 
+/**
+ * Check for yarn installation
+ * @returns {Boolean}
+ */
 const hasYarn = () => {
   try {
     execa.commandSync("yarn --version");
