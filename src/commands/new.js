@@ -1,15 +1,21 @@
 const execa = require("execa");
 const fs = require("fs");
 const enquirer = require("enquirer");
-const kleur = require('kleur');
+const kleur = require("kleur");
 const ora = require("ora");
 const path = require("path");
+const showBanner = require("node-banner");
 
+const { description, name } = require("../../package");
 const copyDir = require("../utils/fs");
 
 const projectScaffold = async (projectName) => {
+  await showBanner(name, description);
+
   if (fs.existsSync(projectName)) {
-    console.error(kleur.red(`A directory with that name already exists in the current path`));
+    console.error(
+      kleur.red(`A directory with that name already exists in the current path`)
+    );
     process.exit(1);
   }
 
@@ -20,7 +26,7 @@ const projectScaffold = async (projectName) => {
     choices: ["Svelte", "Sapper (SSR)"],
   });
 
-  const templateDir = templateOfChoice === 'Svelte' ? 'svelte' : 'sapper';
+  const templateDir = templateOfChoice === "Svelte" ? "svelte" : "sapper";
 
   const source = path.resolve(__dirname, "..", "templates", templateDir);
   const dest = process.cwd();

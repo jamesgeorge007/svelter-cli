@@ -1,7 +1,7 @@
 {
   "name": "svelter",
   "version": "1.0.0-alpha.0",
-  "description": "CLI starter template",
+  "description": "An Unofficial CLI solution for the Svelte ecosystem",
   "main": "./bin/index.js",
   "files": [
     "bin",
