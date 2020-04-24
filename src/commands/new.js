@@ -33,14 +33,22 @@ const projectScaffold = async (projectName, opts) => {
     packageManager = "yarn";
   }
 
-  const { templateOfChoice } = await enquirer.prompt({
-    type: "select",
-    name: "templateOfChoice",
-    message: "Choose from below",
-    choices: ["Svelte", "Sapper (SSR)"],
-  });
+  // Prompt the user to choose between Svelte/Sapper template
+  let answer = {};
+  try {
+    answer = await enquirer.prompt({
+      type: "select",
+      name: "templateOfChoice",
+      message: "Choose from below",
+      choices: ["Svelte", "Sapper (SSR)"],
+    });
+  } catch (err) {
+    console.error(kleur.red("Interrupted"));
+    process.exit(1);
+  }
 
-  const templateDir = templateOfChoice === "Svelte" ? "svelte" : "sapper";
+  const templateDir =
+    answer.templateOfChoice === "Svelte" ? "svelte" : "sapper";
 
   // Copy template to the user's path
   const source = path.resolve(__dirname, "..", "templates", templateDir);

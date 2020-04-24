@@ -9,7 +9,7 @@ program.version(version).usage("<command> [options]");
 program
   .command("new <name>")
   .option("--use-yarn")
-  .description("Scaffold a svelte/sapper project")
+  .description("Scaffolds a svelte/sapper project")
   .action(projectScaffold);
 
 // parse args
