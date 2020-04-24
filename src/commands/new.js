@@ -8,8 +8,9 @@ const showBanner = require("node-banner");
 
 const { description, name } = require("../../package");
 const copyDir = require("../utils/fs");
+const hasYarn = require("../utils/validate");
 
-const projectScaffold = async (projectName) => {
+const projectScaffold = async (projectName, opts) => {
   await showBanner(name, description);
 
   if (fs.existsSync(projectName)) {
@@ -17,6 +18,11 @@ const projectScaffold = async (projectName) => {
       kleur.red(`A directory with that name already exists in the current path`)
     );
     process.exit(1);
+  }
+
+  let packageManager = "npm";
+  if (opts.useYarn && hasYarn()) {
+    packageManager = "yarn";
   }
 
   const { templateOfChoice } = await enquirer.prompt({
@@ -45,7 +51,7 @@ const projectScaffold = async (projectName) => {
 
   const spinner = ora("Installing dependencies").start();
   try {
-    await execa.command("npm install", {
+    await execa.command(`${packageManager} install`, {
       cwd: projectName,
     });
   } catch (err) {
@@ -54,7 +60,9 @@ const projectScaffold = async (projectName) => {
   }
   spinner.succeed("Done");
   console.log(kleur.green(`\n You're almose there`));
-  console.log(kleur.cyan(`\n 1. cd ${projectName}\n 2. npm run dev`));
+  console.log(
+    kleur.cyan(`\n 1. cd ${projectName}\n 2. ${packageManager} run dev`)
+  );
 };
 
 module.exports = projectScaffold;

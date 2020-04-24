@@ -8,6 +8,7 @@ program.version(version).usage("<command> [options]");
 
 program
   .command("new <name>")
+  .option("--use-yarn")
   .description("Scaffold a svelte/sapper project")
   .action(projectScaffold);
 
