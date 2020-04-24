@@ -46,7 +46,4 @@ const copyDir = (source, target) => {
   }
 };
 
-module.exports = {
-  copyFile,
-  copyDir,
-};
+module.exports = copyDir;
