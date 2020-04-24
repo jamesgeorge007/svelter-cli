@@ -27,35 +27,15 @@ const projectScaffold = async (projectName) => {
   const renameTo = path.join(dest, projectName);
   fs.renameSync(renameFrom, renameTo);
 
-  let runScripts = {};
-  let dependencies = [];
-
-  runScripts = {
-    build: "rollup -c",
-    dev: "rollup -c -w",
-    start: "sirv public",
-  };
-  dependencies = [
-    "@rollup/plugin-commonjs",
-    "@rollup/plugin-node-resolve",
-    "rollup",
-    "rollup-plugin-livereload",
-    "rollup-plugin-svelte",
-    "rollup-plugin-terser",
-    "svelte",
-    "sirv-cli",
-  ];
-
   const pkgJsonPath = `${projectName}/package.json`;
   const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath));
   pkgJson.name = projectName;
-  pkgJson.scripts = runScripts;
 
   fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
 
   const spinner = ora("Installing dependencies").start();
   try {
-    await execa.command(`npm install --save-dev ${dependencies.join(" ")}`, {
+    await execa.command("npm install", {
       cwd: projectName,
     });
   } catch (err) {
