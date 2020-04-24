@@ -19,6 +19,7 @@
     "commander": "^5.0.0",
     "enquirer": "^2.3.5",
     "execa": "^4.0.0",
+    "kleur": "^3.0.3",
     "ora": "^4.0.4"
   },
   "devDependencies": {
