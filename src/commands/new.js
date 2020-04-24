@@ -6,15 +6,15 @@ const { copyFile, copyDir } = require("../utils/fs");
 
 const projectScaffold = async (projectName) => {
   if (fs.existsSync(projectName)) {
-  	return;
+    return;
   }
 
-  const { templateOfChoice } = await prompt({
+  /* const { templateOfChoice } = await prompt({
     type: "select",
     name: "templateOfChoice",
     message: "Choose from below",
     choices: ["Svelte", "Sapper (SSR)"],
-  });
+  }); */
 
   const { bundlerOfChoice } = await prompt({
     type: "select",
@@ -23,18 +23,27 @@ const projectScaffold = async (projectName) => {
     choices: ["webpack", "Rollup"],
   });
 
-  const dirSource = path.resolve(__dirname, '..', 'templates', 'svelte');
+  const dirSource = path.resolve(__dirname, "..", "templates", "svelte");
   const dirDest = process.cwd();
 
   copyDir(dirSource, dirDest);
 
-  const renameFrom = path.join(dirDest, 'svelte');
+  const renameFrom = path.join(dirDest, "svelte");
   const renameTo = path.join(dirDest, projectName);
   fs.renameSync(renameFrom, renameTo);
 
-  const configFilePath = bundlerOfChoice === 'webpack' ? ['webpack', 'webpack.config.js'] : ['rollup', 'rollup.config.js'];
+  const configFilePath =
+    bundlerOfChoice === "webpack"
+      ? ["webpack", "webpack.config.js"]
+      : ["rollup", "rollup.config.js"];
 
-  const fileSource = path.resolve(__dirname, '..', 'templates', 'bundler', ...configFilePath);
+  const fileSource = path.resolve(
+    __dirname,
+    "..",
+    "templates",
+    "bundler",
+    ...configFilePath
+  );
   const fileDest = path.resolve(process.cwd(), projectName);
 
   copyFile(fileSource, fileDest);

@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 /**
  * Copy files
  * @param {any} source - source directory path
@@ -48,5 +48,5 @@ const copyDir = (source, target) => {
 
 module.exports = {
   copyFile,
-  copyDir
+  copyDir,
 };
