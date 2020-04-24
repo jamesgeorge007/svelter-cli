@@ -1,6 +1,6 @@
 const program = require("commander");
 
-const projectScaffold = require("./commands/new");
+const scaffoldProject = require("./commands/new");
 
 const { version } = require("../package");
 
@@ -10,7 +10,7 @@ program
   .command("new <name>")
   .option("--use-yarn")
   .description("Scaffolds a svelte/sapper project")
-  .action(projectScaffold);
+  .action(scaffoldProject);
 
 // parse args
 program.parse(process.argv);

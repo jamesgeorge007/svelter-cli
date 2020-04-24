@@ -17,7 +17,7 @@ const hasYarn = require("../utils/validate");
  * @returns {Promise<void>}
  */
 
-const projectScaffold = async (projectName, opts) => {
+const scaffoldProject = async (projectName, opts) => {
   await showBanner(name, description);
 
   if (fs.existsSync(projectName)) {
@@ -87,4 +87,4 @@ const projectScaffold = async (projectName, opts) => {
   );
 };
 
-module.exports = projectScaffold;
+module.exports = scaffoldProject;
