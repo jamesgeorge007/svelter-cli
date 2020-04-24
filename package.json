@@ -18,6 +18,7 @@
   "dependencies": {
     "commander": "^5.0.0",
     "enquirer": "^2.3.5",
+    "execa": "^4.0.0",
     "ora": "^4.0.4"
   },
   "devDependencies": {

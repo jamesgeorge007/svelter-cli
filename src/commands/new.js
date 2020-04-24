@@ -1,6 +1,8 @@
+const execa = require("execa");
 const fs = require("fs");
 const path = require("path");
-const { prompt } = require("enquirer");
+const enquirer = require("enquirer");
+const ora = require("ora");
 
 const { copyFile, copyDir } = require("../utils/fs");
 
@@ -9,14 +11,14 @@ const projectScaffold = async (projectName) => {
     return;
   }
 
-  /* const { templateOfChoice } = await prompt({
+  /* const { templateOfChoice } = await enquirer.prompt({
     type: "select",
     name: "templateOfChoice",
     message: "Choose from below",
     choices: ["Svelte", "Sapper (SSR)"],
   }); */
 
-  const { bundlerOfChoice } = await prompt({
+  const { bundlerOfChoice } = await enquirer.prompt({
     type: "select",
     name: "bundlerOfChoice",
     message: "Choose the module bundler of your choice:",
@@ -47,6 +49,58 @@ const projectScaffold = async (projectName) => {
   const fileDest = path.resolve(process.cwd(), projectName);
 
   copyFile(fileSource, fileDest);
+
+  let runScripts = {};
+  let dependencies = [];
+
+  if (bundlerOfChoice === "webpack") {
+    runScripts = {
+      build: "cross-env NODE_ENV=production webpack",
+      dev: "webpack-dev-server --content-base public",
+    };
+    dependencies = [
+      "cross-env",
+      "css-loader",
+      "mini-css-extract-plugin",
+      "serve",
+      "style-loader",
+      "svelte-loader",
+      "webpack",
+      "webpack-cli",
+      "webpack-dev-server",
+    ];
+  } else {
+    runScripts = {
+      build: "rollup -c",
+      dev: "rollup -c -w",
+      start: "sirv public",
+    };
+    dependencies = [
+      "@rollup/plugin-commonjs",
+      "@rollup/plugin-node-resolve",
+      "rollup",
+      "rollup-plugin-livereload",
+      "rollup-plugin-svelte",
+      "rollup-plugin-terser",
+      "sirv-cli",
+    ];
+  }
+
+  const pkgJsonPath = `${projectName}/package.json`;
+  const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath));
+  pkgJson.name = projectName;
+  pkgJson.scripts = runScripts;
+
+  fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
+
+  const spinner = ora("Installing dependencies").start();
+  try {
+  	await execa.command(`npm install --save-dev ${dependencies.join(' ')}`);
+  } catch (err) {
+  	spinner.fail('Something went wrong');
+  	throw err;
+  }
+  spinner.succeed('Done');
 };
 
 module.exports = projectScaffold;
