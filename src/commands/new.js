@@ -59,7 +59,7 @@ const projectScaffold = async (projectName, opts) => {
     throw err;
   }
   spinner.succeed("Done");
-  console.log(kleur.green(`\n You're almose there`));
+  console.log(kleur.green(`\n Just couple of steps remaining`));
   console.log(
     kleur.cyan(`\n 1. cd ${projectName}\n 2. ${packageManager} run dev`)
   );
