@@ -7,7 +7,7 @@ const { version } = require("../package");
 program.version(version).usage("<command> [options]");
 
 program
-  .command("new")
+  .command("new <name>")
   .description("Scaffold a svelte/sapper project")
   .action(projectScaffold);
 
