@@ -16,6 +16,8 @@ Commands:
 
 ## Usage
 
+`npm install -g svelter-cli`
+
 `svelter new <name>` - Scaffolds a new Svelte/Sapper project.
 
 - Supply `--use-yarn` flag to use `yarn` as the package manager.
