@@ -1,14 +1,16 @@
 const execa = require("execa");
 const fs = require("fs");
-const path = require("path");
 const enquirer = require("enquirer");
+const kleur = require('kleur');
 const ora = require("ora");
+const path = require("path");
 
 const copyDir = require("../utils/fs");
 
 const projectScaffold = async (projectName) => {
   if (fs.existsSync(projectName)) {
-    return;
+    console.error(kleur.red(`A directory with that name already exists in the current path`));
+    process.exit(1);
   }
 
   const { templateOfChoice } = await enquirer.prompt({
@@ -45,6 +47,8 @@ const projectScaffold = async (projectName) => {
     throw err;
   }
   spinner.succeed("Done");
+  console.log(kleur.green(`\n You're almose there`));
+  console.log(kleur.cyan(`\n 1. cd ${projectName}\n 2. npm run dev`));
 };
 
 module.exports = projectScaffold;
