@@ -18,12 +18,14 @@ const projectScaffold = async (projectName) => {
     choices: ["Svelte", "Sapper (SSR)"],
   });
 
-  const source = path.resolve(__dirname, "..", "templates", "svelte");
+  const templateDir = templateOfChoice === 'Svelte' ? 'svelte' : 'sapper';
+
+  const source = path.resolve(__dirname, "..", "templates", templateDir);
   const dest = process.cwd();
 
   copyDir(source, dest);
 
-  const renameFrom = path.join(dest, "svelte");
+  const renameFrom = path.join(dest, templateDir);
   const renameTo = path.join(dest, projectName);
   fs.renameSync(renameFrom, renameTo);
 
