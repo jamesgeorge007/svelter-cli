@@ -1,6 +1,14 @@
 const enquirer = require("enquirer");
 const kleur = require("kleur");
 
+/**
+ * Shows up select prompt
+ * @param {string} message - The message to show up
+ * @param {string} message - Available choices
+ *
+ * @returns {Promise<string>}
+ */
+
 const selectPrompt = (message, choices) => {
   try {
     return enquirer.prompt({
