@@ -74,8 +74,13 @@ const scaffoldProject = async (projectName, opts) => {
     shellCmd = `git clone ${templateRepoUrl} --branch ${bundlerOfChoice} --single-branch ${projectName}`;
   }
 
+  const spinner = ora("Fetching the starter template").start();
+
   // Clone the respective template repository
   await execa.command(shellCmd);
+
+  // Delete .git directory
+  fs.rmdirSync(`${projectName}/.git`, { recursive: true });
 
   // Update package.json
   const pkgJsonPath = `${projectName}/package.json`;
@@ -85,7 +90,7 @@ const scaffoldProject = async (projectName, opts) => {
   fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
 
   // Install project dependencies
-  const spinner = ora("Installing dependencies").start();
+  spinner.text = "Installing dependencies";
   try {
     await execa.command(`${packageManager} install`, {
       cwd: projectName,
@@ -94,7 +99,7 @@ const scaffoldProject = async (projectName, opts) => {
     spinner.fail("Something went wrong");
     throw err;
   }
-  spinner.succeed("Done");
+  spinner.succeed(`You're all set`);
 
   // Final instructions
   console.log(kleur.green(`\n Just couple of steps remaining`));
