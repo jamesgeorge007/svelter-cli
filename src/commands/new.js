@@ -7,8 +7,8 @@ const path = require("path");
 const showBanner = require("node-banner");
 
 const { description, name } = require("../../package");
-const copyDir = require("../utils/fs");
 const hasYarn = require("../utils/validate");
+const selectPrompt = require("../utils/prompt");
 
 /**
  * Scaffold Svelte/Sapper project
@@ -33,33 +33,49 @@ const scaffoldProject = async (projectName, opts) => {
     packageManager = "yarn";
   }
 
-  // Prompt the user to choose between Svelte/Sapper template
-  let answer = {};
+  let templateOfChoice = "Svelte";
+  let bundlerOfChoice = "webpack";
+
+  // Choose between Svelte/Sapper
   try {
-    answer = await enquirer.prompt({
-      type: "select",
-      name: "templateOfChoice",
-      message: "Choose from below",
-      choices: ["Svelte", "Sapper (SSR)"],
-    });
+    ({ userChoice: templateOfChoice } = await selectPrompt(
+      "Choose from below",
+      ["Svelte", "Sapper (SSR)"]
+    ));
   } catch (err) {
     console.error(kleur.red("Interrupted"));
     process.exit(1);
   }
 
-  const templateDir =
-    answer.templateOfChoice === "Svelte" ? "svelte" : "sapper";
+  // Pick your module bundler of choice
+  try {
+    ({
+      userChoice: bundlerOfChoice,
+    } = await selectPrompt("Please pick a module bundler", [
+      "webpack",
+      "rollup",
+    ]));
+  } catch (err) {
+    console.error(kleur.red("Interrupted"));
+    process.exit(1);
+  }
 
-  // Copy template to the user's path
-  const source = path.resolve(__dirname, "..", "templates", templateDir);
-  const dest = process.cwd();
+  let templateRepoUrl = "https://github.com/sveltejs/template";
+  let shellCmd = "";
 
-  copyDir(source, dest);
+  if (templateOfChoice === "Svelte") {
+    if (bundlerOfChoice === "webpack") {
+      templateRepoUrl = `${templateRepoUrl}-webpack`;
+    }
+    shellCmd = `git clone ${templateRepoUrl} ${projectName}`;
+  } else {
+    // User chose Sapper
+    templateRepoUrl = "https://github.com/sveltejs/sapper-template";
+    shellCmd = `git clone ${templateRepoUrl} --branch ${bundlerOfChoice} --single-branch ${projectName}`;
+  }
 
-  // Rename directory to the respective name as supplied by the user
-  const renameFrom = path.join(dest, templateDir);
-  const renameTo = path.join(dest, projectName);
-  fs.renameSync(renameFrom, renameTo);
+  // Clone the respective template repository
+  await execa.command(shellCmd);
 
   // Update package.json
   const pkgJsonPath = `${projectName}/package.json`;
