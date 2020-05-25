@@ -1,14 +1,29 @@
 const execa = require("execa");
 const fs = require("fs");
-const enquirer = require("enquirer");
 const kleur = require("kleur");
 const ora = require("ora");
-const path = require("path");
 const showBanner = require("node-banner");
 
 const { description, name } = require("../../package");
 const hasYarn = require("../utils/validate");
 const selectPrompt = require("../utils/prompt");
+
+/**
+ * Creates an initial local commit
+ * @param {string} projectName - source directory path
+ *
+ * @returns {Void}
+ */
+
+const makeInitialCommit = (projectName) => {
+  // Commands to be executed serially
+  const commands = ["init", "add .", `commit -m "Init" -m "MEVN-CLI"`];
+
+  // Execute commands serially
+  commands.forEach((cmd) =>
+    execa.sync("git", cmd.split(" "), { cwd: projectName })
+  );
+};
 
 /**
  * Scaffold Svelte/Sapper project
@@ -99,6 +114,9 @@ const scaffoldProject = async (projectName, opts) => {
     spinner.fail("Something went wrong");
     throw err;
   }
+
+  makeInitialCommit(projectName);
+
   spinner.succeed(`You're all set`);
 
   // Final instructions
