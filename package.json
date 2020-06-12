@@ -1,6 +1,6 @@
 {
   "name": "svelter-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "An Unofficial CLI solution for the Svelte ecosystem",
   "main": "./bin/index.js",
   "files": [
