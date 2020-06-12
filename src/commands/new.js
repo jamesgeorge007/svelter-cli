@@ -17,7 +17,7 @@ const selectPrompt = require("../utils/prompt");
 
 const makeInitialCommit = (projectName) => {
   // Commands to be executed serially
-  const commands = ["init", "add .", `commit -m "Init" -m "MEVN-CLI"`];
+  const commands = ["init", "add .", `commit -m "Init"`];
 
   // Execute commands serially
   commands.forEach((cmd) =>
