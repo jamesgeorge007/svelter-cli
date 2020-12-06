@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Generate build and check code formatting
+    name: Check code formatting
 
     runs-on: ubuntu-latest
 
